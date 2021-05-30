@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+
+{% block title %}Build Menu - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        <h1>Build Menu For {{ date }}'s {{ meal }}</h1>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-9">
+                {% for section in sections %}
+                    <h2>{{ meal }} {{ section.section_name }}</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-info">Drag dishes below</li>
+                    </ul>
+                    <br>
+
+                    <ul id="sectionDishesList" class="list-group" data-section-id="{{ section.section_id }}"></ul>
+                    <br>
+                {% endfor %}
+
+                <form action="?" method="post" id="menu-form">
+                    {% for section in sections %}
+                        <input type="hidden" name="{{ section.section_id }}"
+                               data-section-id-form="{{ section.section_id }}">
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-info">Drag dishes from below to the left</li>
+                </ul>
+                <br>
+
+                <ul id="dishesList" class="list-group">
+                    {% for dish in list_of_dishes %}
+                        <li class="list-group-item list-group-item-action" data-dish-id="{{ dish.dish_id }}">
+                            <span>{{ dish.dish_name }}</span>
+
+                            {% if dish.is_vegan %}
+                                <span class="badge bg-success">Vegan</span>
+                            {% endif %}
+
+                            {% if dish.is_vegetarian %}
+                                <span class="badge bg-success">Vegetarian</span>
+                            {% endif %}
+
+                            {% if dish.is_halal %}
+                                <span class="badge bg-primary">Halal</span>
+                            {% endif %}
+
+                            {% if dish.is_gluten_free %}
+                                <span class="badge bg-info">Gluten Free</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.js"
+            integrity="sha256-4kb/X7fdoIt98I0YwmRM7NYP84BPJlnHRjLA4VCJ6ns=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script>
+        const sourceDishesList = document.getElementById('dishesList');
+        const destDishesLists = document.querySelectorAll('#sectionDishesList');
+
+        Sortable.create(sourceDishesList, {
+            group: {
+                name: "sourceDishes",
+                put: true
+            },
+            animation: 150,
+            easing: "cubic-bezier(1, 0, 0, 1)",
+            filter: ".ignore-elements",
+            multiDrag: true,
+            selectedClass: "list-group-item-primary", // Class name for selected item
+        });
+
+        const sortableList = Array.from(destDishesLists).map((item) => {
+            return Sortable.create(item, {
+                group: {
+                    name: "destDishes",
+                    put: ["sourceDishes", "destDishes"],
+                },
+                animation: 150,
+                easing: "cubic-bezier(1, 0, 0, 1)",
+                filter: ".ignore-elements",
+                multiDrag: true,
+                dataIdAttr: 'data-dish-id',
+                selectedClass: "list-group-item-primary", // Class name for selected item
+            })
+        });
+
+        $("#menu-form").submit((eventObj) => {
+            const section_uls = document.querySelectorAll("#sectionDishesList");
+
+            // a list of sections
+            const section_ids = Array.from(section_uls).map(element => element.getAttribute("data-section-id"));
+
+            for (let i = 0; i < sortableList.length; i++) {
+                const sortable_id = sortableList[i].el.getAttribute("data-section-id");
+                if (sortable_id === section_ids[i]) {
+                    // get the HTML tags to append data to
+                    const tag_to_append = document.querySelector('[data-section-id-form="' + section_ids[i] + '"]');
+
+                    // get and append the data
+                    tag_to_append.value = JSON.stringify(sortableList[i].toArray());
+                }
+            }
+
+            return true;
+        });
+
+    </script>
+
+{% endblock %}

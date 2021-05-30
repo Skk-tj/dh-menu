@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block title %}Preview Menu - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        <h1>Preview Menu For {{ date.strftime("%A %b %-d, %Y") }} {{ meal_string }}</h1>
+
+        <div class="card">
+            <div class="card-header" data-bs-toggle="collapse" href="#collapseExample1" role="button"
+                 aria-expanded="true" aria-controls="collapseExample1">
+                <span class="text-primary">{{ date.strftime("%A") }}</span> <span
+                    class="text-muted d-inline float-end">{{ date.strftime("%b %-d") }}</span>
+            </div>
+            <div class="card-body collapse show" id="collapseExample1">
+                <h5 class="card-title">{{ meal_string }}</h5>
+                <h6 class="text-muted">{{ opening_time.time_open.strftime("%I:%M %p") }}
+                    - {{ opening_time.time_close.strftime("%I:%M %p") }}</h6>
+
+                <div class="row" data-masonry='{"percentPosition": true }'>
+                    {% for section, dishes in menu.items() %}
+                        <div class="col-sm-12 col-lg-6">
+                            <ul class="list-group">
+                                <li class="list-group-item active text-uppercase">{{ meal_string + " " + section.section_name }}</li>
+                                {% for dish in dishes %}
+                                    <li class="list-group-item">
+                                        <div>
+                                            <div>
+                                                <span>{{ dish.dish_name }}</span>
+
+                                                {% if dish.is_vegan %}
+                                                    <span class="badge rounded-pill bg-success">Vegan</span>
+                                                {% endif %}
+
+                                                {% if dish.is_vegetarian %}
+                                                    <span class="badge rounded-pill bg-success">Vegetarian</span>
+                                                {% endif %}
+
+                                                {% if dish.is_halal %}
+                                                    <span class="badge rounded-pill bg-primary">Halal</span>
+                                                {% endif %}
+
+                                                {% if dish.is_gluten_free %}
+                                                    <span class="badge rounded-pill bg-info">Gluten Free</span>
+                                                {% endif %}
+
+                                            </div>
+                                            {% if dish.annotation %}
+                                                <small class="text-muted">{{ dish.annotation }}</small>
+                                            {% endif %}
+                                        </div>
+
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                            <br>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

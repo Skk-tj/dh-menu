@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}Publish Menu - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        <h1>Select Week to Manage Menu</h1>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-floating">
+                {{ form.week(class_="form-control") }}
+                {{ form.week.label }}
+                <div class="form-text"><i class="text-muted">[Required]</i></div>
+                {% for error in form.week.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <br>
+
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+
+    </div>
+{% endblock %}

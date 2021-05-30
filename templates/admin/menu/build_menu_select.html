@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}Build Menu - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        <h1>Build Menu</h1>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-floating">
+                {{ form.date(class_="form-control") }}
+                {{ form.date.label }}
+                <div class="form-text"><i class="text-muted">[Required]</i></div>
+                {% for error in form.date.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <br>
+
+            <div class="form-floating">
+                {{ form.meal(class_="form-control") }}
+                {{ form.meal.label }}
+                <div class="form-text"><i class="text-muted">[Required]</i></div>
+                {% for error in form.meal.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <br>
+
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+
+    </div>
+{% endblock %}

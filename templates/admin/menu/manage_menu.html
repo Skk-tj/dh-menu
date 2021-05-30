@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+
+{% block title %}Manage Menu - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1>Manage Menu</h1>
+
+        <div class="nav nav-pills nav-justified" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            {% for day in menu_for_week %}
+                <button class="nav-link {{ "active" if loop.first }}"
+                        id="{{ "v-pills-" + day['date'].isoformat() + "-tab" }}"
+                        data-bs-toggle="pill"
+                        data-bs-target="#{{ "v-pills-" + day['date'].isoformat() }}" type="button" role="tab"
+                        aria-controls="{{ "v-pills-" + day['date'].isoformat() }}"
+                        aria-selected="{{ "true" if loop.first else "false" }}"> {{ day['date'].strftime("%A") }}
+                </button>
+            {% endfor %}
+        </div>
+        <hr>
+        <div class="tab-content" id="v-pills-tabContent">
+            {% for day in menu_for_week %}
+                <div class="tab-pane fade {{ "show active" if loop.first }}"
+                     id="{{ "v-pills-" + day['date'].isoformat() }}"
+                     role="tabpanel"
+                     aria-labelledby="{{ "v-pills-" + day['date'].isoformat() }}">
+
+
+                    <h3>{{ day['date'].strftime("%A %b %-d, %Y") }}</h3>
+
+                    {% for meal, menu in day['menu'].items() %}
+                        <table class="table caption-top">
+                            <caption>{{ meal.name }}</caption>
+                            <thead>
+                            <tr class="table-secondary text-center">
+                                {% for section in sections[meal.value] %}
+                                    <th scope="row"> {{ section[0] }} </th>
+                                {% endfor %}
+                                <th scope="row" class="text-end">Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr>
+                                {% for section in sections[meal.value] %}
+                                    <th scope="row" class="text-center">
+                                        {# section[1] is the UUID of the section #}
+
+                                        {% if section[1] in menu.keys() %}
+                                            <i class="bi bi-check-circle text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-x-circle text-danger"></i>
+                                        {% endif %}
+                                    </th>
+                                {% endfor %}
+                                <th class="text-end">
+                                    {% if menu %}
+                                        <a class="btn btn-primary btn-sm"
+                                           href="{{ url_for("menu_routes.edit_menu", date=day['date'], meal=meal.value) }}"
+                                           role="button">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                    {% else %}
+                                        <a class="btn btn-primary btn-sm"
+                                           href="{{ url_for("menu_routes.build_menu_this_day", date=day['date'], meal=meal.value) }}"
+                                           role="button">
+                                            <i class="bi bi-plus-square"></i> Build
+                                        </a>
+                                    {% endif %}
+                                    <a class="btn btn-secondary btn-sm {{ "disabled" if not menu }}"
+                                       href="{{ url_for("menu_routes.preview_menu_for_date_meal", date=day['date'], meal=meal.value) }}"
+                                       role="button" aria-disabled="{{ "true" if not menu }}"
+                                       tabindex="{{ "-1" if not menu }}">
+                                        <i class="bi bi-eyeglasses"></i> Preview
+                                    </a>
+
+                                    {# TODO: This should launch a modal to confirm delete. #}
+
+                                    <a class="btn btn-danger btn-sm {{ "disabled" if not menu }}"
+                                       href="{{ url_for("menu_routes.reset_menu", date=day['date'], meal=meal.value) }}"
+                                       role="button"
+                                       aria-disabled="{{ "true" if not menu }}" tabindex="{{ "-1" if not menu }}">
+                                        <i class="bi bi-x-lg"></i> Reset
+                                    </a>
+                                </th>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    {% endfor %}
+                    <br>
+                    {% if not day["is_published"] %}
+                        <a class="btn btn-success"
+                           href="{{ url_for("menu_routes.publish_date", date=day["date"].isoformat()) }}"
+                           role="button"
+                           aria-disabled="{{ "true" if not menu }}" tabindex="{{ "-1" if not menu }}">
+                            <i class="bi bi-broadcast"></i> Publish
+                        </a>
+                    {% else %}
+                        <a class="btn btn-danger"
+                           href="{{ url_for("menu_routes.undo_publish_date", date=day["date"].isoformat()) }}"
+                           role="button"
+                           aria-disabled="false">
+                            <i class="bi bi-broadcast"></i> Unpublish
+                        </a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

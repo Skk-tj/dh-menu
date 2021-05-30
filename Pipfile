@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+isoweek = "*"
+Flask = "*"
+Flask-SQLAlchemy = "*"
+Flask-WTF = "*"
+WTForms = "*"
+sqlalchemy = "*"
+envparse = "*"
+python-dateutil = "*"
+psycopg2 = "*"
+holidays = "*"
+gunicorn = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

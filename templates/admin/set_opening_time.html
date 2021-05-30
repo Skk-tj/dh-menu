@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block title %}Set Opening Time - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1>Set Opening Time</h1>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.meal.label(class_="form-label") }}
+                {{ form.meal(class_="form-select") }}
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text">Meal Start Time</span>
+                {{ form.meal_start(class_="form-control") }}
+                <span class="input-group-text">Meal End Time</span>
+                {{ form.meal_end(class_="form-control") }}
+            </div>
+
+            <div class="form-check">
+                {{ form.is_work_day(class_="form-check-input") }}
+                {{ form.is_work_day.label(class_="form-check-label") }}
+            </div>
+
+            <br>
+
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+
+        <hr>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Meal</th>
+                <th scope="col">Time (Workday)</th>
+                <th scope="col">Time (Weekend/Holiday)</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for meal, time in opening_time.items() %}
+                <tr>
+                <th scope="row">{{ meal }}</th>
+                <td>{{ time[0][1].strftime("%I:%M %p") }} - {{ time[0][2].strftime("%I:%M %p") }}</td>
+                <td>{{ time[1][1].strftime("%I:%M %p" ) }} - {{ time[1][2].strftime("%I:%M %p") }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}

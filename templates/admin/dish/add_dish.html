@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}Add Dish - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        <h1>Add Dish</h1>
+
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.dish_name.label }}
+                {{ form.dish_name(class_="form-control") }}
+                <div class="form-text"><i>[Required]</i></div>
+                {% for error in form.dish_name.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                {{ form.annotation.label(class_="form-label") }}
+                {{ form.annotation(class_="form-control") }}
+            </div>
+            <br>
+
+            <div class="form-check">
+                {{ form.is_vegan(class_="form-check-input") }}
+                {{ form.is_vegan.label(class_="form-check-label") }}
+            </div>
+
+            <div class="form-check">
+                {{ form.is_vegetarian(class_="form-check-input") }}
+                {{ form.is_vegetarian.label(class_="form-check-label") }}
+            </div>
+
+            <div class="form-check">
+                {{ form.is_halal(class_="form-check-input") }}
+                {{ form.is_halal.label(class_="form-check-label") }}
+            </div>
+
+            <div class="form-check">
+                {{ form.is_gluten_free(class_="form-check-input") }}
+                {{ form.is_gluten_free.label(class_="form-check-label") }}
+            </div>
+            <br>
+
+            <div class="form-floating">
+                {{ form.for_which_meal(class_="form-control") }}
+                {{ form.for_which_meal.label }}
+                <div class="form-text"><i>[Required]</i></div>
+                {% for error in form.for_which_meal.errors %}
+                    <span class="text-danger">{{ error }}</span>>
+                {% endfor %}
+            </div>
+            <br>
+
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+    </div>
+{% endblock %}

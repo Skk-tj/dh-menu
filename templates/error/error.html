@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}Error - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        <h1>{% block error_name %}{% endblock %}</h1>
+        <h5>{{ error_content }}</h5>
+    </div>
+{% endblock %}

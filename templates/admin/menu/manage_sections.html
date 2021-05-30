@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}Manage Sections - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        {% for meal, sections_list in sections_dict.items() %}
+            <h2>{{ meal.name }}</h2>
+            {% for section in sections_list %}
+                <h5>{{ section[0] }}</h5>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}

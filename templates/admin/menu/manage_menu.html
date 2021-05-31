@@ -80,6 +80,7 @@
                                             <i class="bi bi-plus-square"></i> Build
                                         </a>
                                     {% endif %}
+
                                     <a class="btn btn-secondary btn-sm {{ "disabled" if not menu }}"
                                        href="{{ url_for("menu_routes.preview_menu_for_date_meal", date=day['date'], meal=meal.value) }}"
                                        role="button" aria-disabled="{{ "true" if not menu }}"
@@ -87,15 +88,41 @@
                                         <i class="bi bi-eyeglasses"></i> Preview
                                     </a>
 
-                                    {# TODO: This should launch a modal to confirm delete. #}
-
-                                    <a class="btn btn-danger btn-sm {{ "disabled" if not menu }}"
-                                       href="{{ url_for("menu_routes.reset_menu", date=day['date'], meal=meal.value) }}"
-                                       role="button"
-                                       aria-disabled="{{ "true" if not menu }}" tabindex="{{ "-1" if not menu }}">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-danger btn-sm {{ "disabled" if not menu }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#menuResetModel{{ loop.index0 }}">
                                         <i class="bi bi-x-lg"></i> Reset
-                                    </a>
+                                    </button>
                                 </th>
+                                <!-- Modal -->
+                                <div class="modal fade" id="menuResetModel{{ loop.index0 }}" tabindex="-1"
+                                     aria-labelledby="menuResetModelLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="menuResetModelLabel">Reset Menu</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to reset the <span class="fw-bold">{{ meal.name }} menu</span>?
+                                                This action is <span class="fw-bold text-uppercase">not</span>
+                                                reversible.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close
+                                                </button>
+                                                <a class="btn btn-danger"
+                                                   href="{{ url_for("menu_routes.reset_menu", date=day['date'], meal=meal.value) }}"
+                                                   role="button">
+                                                    <i class="bi bi-x-lg"></i> Reset
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </tr>
                             </tbody>
 

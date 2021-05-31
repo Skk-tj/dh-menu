@@ -62,10 +62,41 @@
                                href="{{ url_for("dish_routes.edit_dish", dish_id=dish.dish_id) }}"
                                role="button"><i class="bi bi-pencil-square"></i> Edit</a>
 
-                            {# TODO: This should prompt a modal asking for confirmation. #}
-                            <a class="btn btn-danger btn-sm dish-delete"
-                               href="{{ url_for("dish_routes.delete_dish", dish_id=dish.dish_id) }}"
-                               role="button"><i class="bi bi-trash"></i> Delete</a>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#dishDeleteModel{{ loop.index0 }}">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="dishDeleteModel{{ loop.index0 }}" tabindex="-1" role="dialog"
+                                 aria-labelledby="dishDeleteModelLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="dishDeleteModelLabel">Delete
+                                                Dish</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete
+                                            <span class="fw-bold">{{ dish.dish_name }}</span>?
+                                            This action is <span class="fw-bold text-uppercase">not</span> reversible.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <a class="btn btn-danger"
+                                               href="{{ url_for("dish_routes.delete_dish", dish_id=dish.dish_id) }}"
+                                               role="button">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}

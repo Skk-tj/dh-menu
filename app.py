@@ -26,10 +26,14 @@ from routes.user_routes import db as user_routes_db
 config = config.get_config_from_env()
 
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = config.FLASK_KEY
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://{}@{}/{}".format(config.DATABASE_USERNAME,
-                                                                       config.DATABASE_ADDRESS,
-                                                                       config.DATABASE_NAME)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URL
+uri = config.DATABASE_URL
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_ECHO'] = False
 

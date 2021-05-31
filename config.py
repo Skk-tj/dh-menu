@@ -10,9 +10,7 @@ class Config(abc.ABC):
     Abstract Config data class, do not instantiate this class.
     """
 
-    DATABASE_ADDRESS: str
-    DATABASE_USERNAME: str
-    DATABASE_NAME: str
+    DATABASE_URL: str
     DATABASE_SCHEMA: str
 
     FLASK_KEY: str
@@ -25,19 +23,15 @@ class TestConfig(Config):
     """
 
     def __init__(self):
-        super().__init__(envparse.env.str("DATABASE_ADDRESS"),
-                         envparse.env.str("DATABASE_USERNAME"),
-                         envparse.env.str("DATABASE_NAME"),
-                         envparse.env.str("DATABASE_SCHEMA"),
-                         envparse.env.str("FLASK_KEY"))
+        super().__init__(envparse.env.str("TEST_DATABASE_URL"),
+                         envparse.env.str("TEST_DATABASE_SCHEMA"),
+                         envparse.env.str("TEST_FLASK_KEY"))
 
 
 class ProductionConfig(Config):
     def __init__(self):
-        super().__init__(envparse.env.str("HEROKU_DATABASE_ADDRESS"),
-                         envparse.env.str("HEROKU_DATABASE_USERNAME"),
-                         envparse.env.str("HEROKU_DATABASE_NAME"),
-                         envparse.env.str("HEROKU_DATABASE_SCHEMA"),
+        super().__init__(envparse.env.str("DATABASE_URL"),
+                         envparse.env.str("DATABASE_SCHEMA"),
                          envparse.env.str("HEROKU_FLASK_KEY"))
 
 

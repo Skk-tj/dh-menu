@@ -21,6 +21,7 @@
                 <div class="card" data-aos="fade-up">
                     <div class="card-header" data-bs-toggle="collapse" href="#collapseExample{{ loop.index }}"
                          role="button" aria-expanded="true" aria-controls="collapseExample{{ loop.index }}">
+                        <i class="bi bi-chevron-down"></i>
                         <span class="text-primary">{{ day["date"].strftime("%A") }}</span>
                         <span class="text-muted d-inline float-end">
                             {{ day["date"].strftime("%b %-d") }}
@@ -44,7 +45,7 @@
                                     {% for section in meal["menu"] %}
                                         <div class="col-sm-12 col-lg-6">
                                             <ul class="list-group">
-                                                <li class="list-group-item list-group-item-info text-uppercase">
+                                                <li class="list-group-item list-group-item-primary text-uppercase">
                                                     {{ meal["meal_str"] + " " + section.section_name }}
                                                 </li>
                                                 {% for dish in section["dishes"] %}

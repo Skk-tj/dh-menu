@@ -2,26 +2,27 @@ import envparse
 from flask import Flask, render_template
 
 import config
-from models.db.db_dish_model import db as dish_db
-from models.db.db_sections_model import db as sections_db
-from models.db.db_menu_for_meal_model import db as menu_for_meal_db
+
 from models.db.db_days_published import db as days_published_db
+from models.db.db_dish_model import db as dish_db
 from models.db.db_meal_time import db as opening_time_db
+from models.db.db_menu_for_meal_model import db as menu_for_meal_db
+from models.db.db_sections_model import db as sections_db
 
-from routes.admin.dish_routes import dish_routes
 from routes.admin.dish_routes import db as dish_routes_db
+from routes.admin.dish_routes import dish_routes
 
-from routes.admin.menu_routes import menu_routes
-from routes.admin.menu_routes import db as menu_routes_db
-
-from routes.admin.logistics_routes import logistics_routes
 from routes.admin.logistics_routes import db as logistics_routes_db
+from routes.admin.logistics_routes import logistics_routes
 
-from routes.api.menu_api import menu_api
+from routes.admin.menu_routes import db as menu_routes_db
+from routes.admin.menu_routes import menu_routes
+
 from routes.api.menu_api import db as menu_api_db
+from routes.api.menu_api import menu_api
 
-from routes.user_routes import user_routes
 from routes.user_routes import db as user_routes_db
+from routes.user_routes import user_routes
 
 config = config.get_config_from_env()
 

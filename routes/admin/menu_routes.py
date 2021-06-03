@@ -315,7 +315,7 @@ def edit_menu(date: str, meal: int):
         remaining_dishes = [item for item in total_list_of_dishes if item not in dishes_in_sections]
 
         return render_template("admin/menu/edit_menu.html", date=date_string, sections=sections, menu=menu,
-                               list_of_dishes=remaining_dishes)
+                               list_of_dishes=remaining_dishes, meal=meal_enum.name)
 
     elif request.method == "POST":
         menu_dict = {key: json.loads(value) for (key, value) in request.form.items()}

@@ -11,15 +11,18 @@
         <hr>
 
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 {% for section in sections %}
-                    <h2>{{ meal }} {{ section.section_name }}</h2>
-                    <ul class="list-group">
-                        <li class="list-group-item list-group-item-info">Drag dishes below</li>
-                    </ul>
-                    <br>
+                    <span class="fs-2">{{ meal }} {{ section.section_name }}</span>
+                    <span class="float-end" data-section-id="{{ section.section_id }}">
+                        <button type="button"
+                                class="btn btn-primary"
+                                onclick="moveSelectedHere(this.parentElement.getAttribute('data-section-id'))">
+                            <i class="bi bi-arrow-down"></i> Move Here
+                        </button>
+                    </span>
 
-                    <ul id="sectionDishesList" class="list-group" data-section-id="{{ section.section_id }}"></ul>
+                    <div id="sectionDishesList" class="list-group" data-section-id="{{ section.section_id }}"></div>
                     <br>
                 {% endfor %}
 
@@ -29,18 +32,19 @@
                                data-section-id-form="{{ section.section_id }}">
                     {% endfor %}
 
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save</button>
                 </form>
             </div>
-            <div class="col-md-3">
-                <ul class="list-group">
-                    <li class="list-group-item list-group-item-info">Drag dishes from below to the left</li>
-                </ul>
-                <br>
-
-                <ul id="dishesList" class="list-group">
+            <div class="col-md-4">
+                <button type="button"
+                        class="btn btn-danger"
+                        onclick="moveSelectedAway()">
+                    <i class="bi bi-arrow-right"></i> Move Away
+                </button>
+                <div id="dishesList" class="list-group mt-3">
                     {% for dish in list_of_dishes %}
-                        <li class="list-group-item list-group-item-action" data-dish-id="{{ dish.dish_id }}">
+                        <label class="list-group-item list-group-item-action" data-dish-id="{{ dish.dish_id }}">
+                            <input class="form-check-input me-1" type="checkbox" value="">
                             <span>{{ dish.dish_name }}</span>
 
                             {% if dish.is_vegan %}
@@ -58,9 +62,9 @@
                             {% if dish.is_gluten_free %}
                                 <span class="badge bg-info">Gluten Free</span>
                             {% endif %}
-                        </li>
+                        </label>
                     {% endfor %}
-                </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -102,6 +106,26 @@
             })
         });
 
+        function moveSelectedHere(sectionID) {
+            const sourceDishes = document.querySelectorAll("label");
+            for (const dish of sourceDishes) {
+                if (dish.childNodes[1].checked) {
+                    document.querySelector(`#sectionDishesList[data-section-id='${sectionID}']`).appendChild(dish);
+                    dish.childNodes[1].checked = false;
+                }
+            }
+        }
+
+        function moveSelectedAway() {
+            const sourceDishes = document.querySelectorAll("label");
+            for (const dish of sourceDishes) {
+                if (dish.childNodes[1].checked) {
+                    document.getElementById("dishesList").appendChild(dish);
+                    dish.childNodes[1].checked = false;
+                }
+            }
+        }
+
         $("#menu-form").submit((eventObj) => {
             const section_uls = document.querySelectorAll("#sectionDishesList");
 
@@ -121,7 +145,6 @@
 
             return true;
         });
-
     </script>
 
 {% endblock %}

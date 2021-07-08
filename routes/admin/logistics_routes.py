@@ -2,6 +2,7 @@ from itertools import groupby
 
 import sqlalchemy.exc
 from flask import Blueprint, request, render_template, redirect, url_for, abort, flash
+from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
 from models.db.db_meal_time import MealTime
@@ -13,6 +14,7 @@ logistics_routes = Blueprint("logistics_routes", __name__, template_folder='temp
 db = SQLAlchemy()
 
 
+@login_required
 @logistics_routes.route("/set_opening_time", methods=["GET", "POST"])
 def set_opening_time():
     form = SetMealTimeForm()

@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}Register - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1>Register</h1>
+
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username(class_="form-control", autocomplete="off") }}
+                <div class="form-text">
+                    <i>More than 4 characters required, alpha-numerical characters and underscores only. </i>
+                </div>
+                {% for error in form.username.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                {{ form.password.label }}
+                {{ form.password(class_="form-control") }}
+                <div class="form-text">
+                    <i>More than 8 characters required. </i>
+                </div>
+                {% for error in form.password.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                {{ form.confirm.label }}
+                {{ form.confirm(class_="form-control") }}
+                {% for error in form.confirm.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <br>
+
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+
+    </div>
+{% endblock %}

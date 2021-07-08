@@ -15,8 +15,11 @@ python-dateutil = "*"
 psycopg2 = "*"
 holidays = "*"
 gunicorn = "*"
+flask-login = "*"
+bcrypt = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.9"

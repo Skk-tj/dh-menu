@@ -7,6 +7,7 @@ import dateutil.parser
 import isoweek
 import sqlalchemy.exc
 from flask import Blueprint, render_template, redirect, url_for, abort, request, flash
+from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
 from models.db.db_days_published import DaysPublished
@@ -118,6 +119,7 @@ def _update_publish_version() -> uuid.UUID:
     return version.id
 
 
+@login_required
 @menu_routes.route("/build_menu", methods=['GET', 'POST'])
 def build_menu_select():
     form = BuildMenuSelectForm()
@@ -132,6 +134,7 @@ def build_menu_select():
                                     meal=form.meal.data))
 
 
+@login_required
 @menu_routes.route("/build_menu/<string:date>/<int:meal>", methods=['GET', 'POST'])
 def build_menu_this_day(date: str, meal: int):
     try:
@@ -168,6 +171,7 @@ def build_menu_this_day(date: str, meal: int):
         return redirect(url_for("menu_routes.manage_menu_for_week", week=datetime_object.strftime("%Y-W%W")))
 
 
+@login_required
 @menu_routes.route("/manage_menu", methods=['GET', 'POST'])
 def manage_menu_select():
     form = PublishMenuSelectForm()
@@ -180,6 +184,7 @@ def manage_menu_select():
             return redirect(url_for("menu_routes.manage_menu_for_week", week=form.week.data))
 
 
+@login_required
 @menu_routes.route("/manage_menu/<string:week>")
 def manage_menu_for_week(week: str):
     try:
@@ -201,6 +206,7 @@ def manage_menu_for_week(week: str):
                            sections=sections)
 
 
+@login_required
 @menu_routes.route("/preview_menu/<string:date>/<int:meal>/")
 def preview_menu_for_date_meal(date: str, meal: int):
     try:
@@ -221,6 +227,7 @@ def preview_menu_for_date_meal(date: str, meal: int):
                            opening_time=opening_time)
 
 
+@login_required
 @menu_routes.route("/manage_sections")
 def manage_sections():
     sections_dict = _get_sections_dict()
@@ -228,6 +235,7 @@ def manage_sections():
     return render_template("admin/menu/manage_sections.html", sections_dict=sections_dict)
 
 
+@login_required
 @menu_routes.route("/publish/<string:date>")
 def publish_date(date: str):
     try:
@@ -253,6 +261,7 @@ def publish_date(date: str):
         return abort(500, e)
 
 
+@login_required
 @menu_routes.route("/undo_publish/<string:date>")
 def undo_publish_date(date: str):
     try:
@@ -282,6 +291,7 @@ def undo_publish_date(date: str):
         return abort(500)
 
 
+@login_required
 @menu_routes.route("/edit_menu/<string:date>/<int:meal>", methods=["GET", "POST"])
 def edit_menu(date: str, meal: int):
     try:
@@ -340,6 +350,7 @@ def edit_menu(date: str, meal: int):
             url_for("menu_routes.manage_menu_for_week", week=datetime_object.strftime("%Y-W%W")))
 
 
+@login_required
 @menu_routes.route("/reset_menu/<string:date>/<int:meal>")
 def reset_menu(date: str, meal: int):
     try:

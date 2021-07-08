@@ -2,6 +2,7 @@ import uuid
 
 import sqlalchemy.exc
 from flask import Blueprint, render_template, redirect, url_for, abort, request, flash
+from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
 from models.db.db_dish_model import Dish
@@ -14,6 +15,7 @@ db = SQLAlchemy()
 
 
 @dish_routes.route('/add_dish', methods=['GET', 'POST'])
+@login_required
 def add_dish():
     form = AddDishForm()
     if request.method == "POST":
@@ -27,7 +29,7 @@ def add_dish():
             form.uuid = uuid.uuid4()
 
             new_dish = Dish(form.uuid,
-                            form.dish_name.data,
+                            form.dish_name.data.capitalize(),
                             form.is_vegan.data,
                             form.is_vegetarian.data,
                             form.is_halal.data,
@@ -44,10 +46,13 @@ def add_dish():
                 return abort(500, e)
 
             return redirect(url_for("dish_routes.manage_dish"))
+        else:
+            return render_template("admin/dish/add_dish.html", form=form)
     elif request.method == "GET":
         return render_template("admin/dish/add_dish.html", form=form)
 
 
+@login_required
 @dish_routes.route('/manage_dish', methods=['GET'])
 def manage_dish():
     # make database query to get all the dishes
@@ -60,6 +65,7 @@ def manage_dish():
     return render_template("admin/dish/manage_dish.html", dishes=dishes)
 
 
+@login_required
 @dish_routes.route('/delete_dish/<string:dish_id>')
 def delete_dish(dish_id):
     try:
@@ -74,6 +80,7 @@ def delete_dish(dish_id):
         return abort(500, e)
 
 
+@login_required
 @dish_routes.route('/edit_dish', methods=["GET", "POST"])
 def edit_dish():
     if "dish_id" in request.args:

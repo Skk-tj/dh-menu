@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from "flash_alert.html" import flash_alert %}
 
 {% block title %}This Week - SFU Dining Hall{% endblock %}
 
@@ -6,6 +7,8 @@
     <br>
 
     <div class="container">
+        {{ flash_alert() }}
+
         {% if True in is_empty %}
             <h2>Menu For This Week</h2>
         {% else %}

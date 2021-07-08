@@ -1,5 +1,6 @@
 import envparse
 from flask import Flask, render_template
+from flask_login import LoginManager
 
 import config
 
@@ -8,6 +9,7 @@ from models.db.db_dish_model import db as dish_db
 from models.db.db_meal_time import db as opening_time_db
 from models.db.db_menu_for_meal_model import db as menu_for_meal_db
 from models.db.db_sections_model import db as sections_db
+from models.db.db_user_model import User
 
 from routes.admin.dish_routes import db as dish_routes_db
 from routes.admin.dish_routes import dish_routes
@@ -17,6 +19,8 @@ from routes.admin.logistics_routes import logistics_routes
 
 from routes.admin.menu_routes import db as menu_routes_db
 from routes.admin.menu_routes import menu_routes
+
+from routes.admin.login_routes import login_routes
 
 from routes.api.menu_api import db as menu_api_db
 from routes.api.menu_api import menu_api
@@ -58,6 +62,20 @@ app.register_blueprint(user_routes)
 app.register_blueprint(dish_routes)
 app.register_blueprint(logistics_routes)
 app.register_blueprint(menu_api)
+app.register_blueprint(login_routes)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+login_manager.login_view = "login_routes.login"
+login_manager.login_message = u"Please login to access this page. "
+login_manager.login_message_category = "alert-info"
+login_manager.session_protection = "strong"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 
 @app.errorhandler(400)
@@ -83,6 +101,11 @@ def apply_security(response):
     if not envparse.env.bool("FLASK_DEBUG", default=False):
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     return response
+
+
+@app.context_processor
+def inject_registration_state():
+    return dict(is_register_open=config.REGISTER_OPEN)
 
 
 if __name__ == '__main__':

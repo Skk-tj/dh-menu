@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% from "flash_alert.html" import flash_alert %}
+
+{% block title %}Login - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        {{ flash_alert() }}
+
+        <h1>Login</h1>
+
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username(class_="form-control", autocomplete="off") }}
+            </div>
+            <br>
+
+            <div class="form-group">
+                {{ form.password.label }}
+                {{ form.password(class_="form-control") }}
+            </div>
+            <br>
+
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+
+    </div>
+{% endblock %}

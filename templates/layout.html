@@ -28,53 +28,77 @@
                         week</a>
                 </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink1" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Dish Management
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for("dish_routes.add_dish") }}">
-                                <i class="bi bi-plus-square"></i> Add Dish
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for("dish_routes.manage_dish") }}">
-                                <i class="bi bi-journal-text"></i> Manage Dish
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink1" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Dish Management
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for("dish_routes.add_dish") }}">
+                                    <i class="bi bi-plus-square"></i> Add Dish
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for("dish_routes.manage_dish") }}">
+                                    <i class="bi bi-journal-text"></i> Manage Dish
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink2" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Menu Management
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for("menu_routes.manage_sections") }}">
-                                <i class="bi bi-list-task"></i> Section Management
-                            </a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink2" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu Management
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for("menu_routes.manage_sections") }}">
+                                    <i class="bi bi-list-task"></i> Section Management
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for("menu_routes.build_menu_select") }}">
+                                    <i class="bi bi-plus-square"></i> Build Menu
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for("menu_routes.manage_menu_select") }}">
+                                    <i class="bi bi-broadcast"></i> Manage Menu
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for("logistics_routes.set_opening_time") }}">
+                                    <i class="bi bi-door-open"></i> Set Opening Time
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <ul class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link active">Welcome, {{ current_user.user_id }}</span>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for("login_routes.logout") }}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for("login_routes.login") }}">Login</a>
+                    </li>
+
+                    {% if is_register_open %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ url_for("login_routes.register") }}">Register</a>
                         </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for("menu_routes.build_menu_select") }}">
-                                <i class="bi bi-plus-square"></i> Build Menu
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for("menu_routes.manage_menu_select") }}">
-                                <i class="bi bi-broadcast"></i> Manage Menu
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for("logistics_routes.set_opening_time") }}">
-                                <i class="bi bi-door-open"></i> Set Opening Time
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                    {% endif %}
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -85,7 +109,7 @@
 
 <br>
 <footer>
-    <p class="text-center text-muted small">SFU Dining Menu 0.0.2-demo | Google Chrome and Microsoft Edge are
+    <p class="text-center text-muted small">SFU Dining Menu 0.0.3-demo | Google Chrome and Microsoft Edge are
         recommended. </p>
 </footer>
 

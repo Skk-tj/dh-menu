@@ -37,9 +37,6 @@ def view_week(week):
 
     is_empty = [day["is_published"] for day in menu]
 
-    import pprint
-    pprint.pp(menu)
-
     return render_template("user/index.html", menu=menu, is_empty=is_empty, this_week=week_obj)
 
 

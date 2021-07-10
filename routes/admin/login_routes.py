@@ -1,7 +1,8 @@
 from datetime import timedelta
+from functools import wraps
 
 import sqlalchemy.exc
-from flask import Blueprint, abort, request, render_template, flash, redirect, url_for
+from flask import Blueprint, abort, request, render_template, flash, redirect, url_for, g
 from flask_login import logout_user, login_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 
@@ -9,6 +10,8 @@ from models.form.login_form import LoginForm
 from models.form.register_form import RegisterForm
 
 from models.db.db_user_model import User
+
+import config
 
 import bcrypt
 
@@ -49,7 +52,19 @@ def prompt_incorrect_credential():
     flash("Either username or password does not match our records, please try again. ", "alert-danger")
 
 
+def check_register_status(f):
+    @wraps(f)
+    def inner(*args, **kwargs):
+        if not config.get_config_from_env().REGISTER_OPEN:
+            return abort(403)
+
+        return f(*args, **kwargs)
+
+    return inner
+
+
 @login_routes.route("/register", methods=["GET", "POST"])
+@check_register_status
 def register():
     register_form = RegisterForm()
 

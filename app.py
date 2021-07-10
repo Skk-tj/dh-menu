@@ -104,8 +104,8 @@ def apply_security(response):
 
 
 @app.context_processor
-def inject_registration_state():
-    return dict(is_register_open=config.REGISTER_OPEN)
+def inject():
+    return dict(is_register_open=config.REGISTER_OPEN, version_string=config.VERSION_STRING)
 
 
 if __name__ == '__main__':

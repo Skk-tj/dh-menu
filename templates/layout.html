@@ -90,12 +90,12 @@
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for("login_routes.login") }}">Login</a>
+                        <a class="nav-link active" href="{{ url_for("login_routes.login") }}">Admin Login</a>
                     </li>
 
                     {% if is_register_open %}
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ url_for("login_routes.register") }}">Register</a>
+                            <a class="nav-link active" href="{{ url_for("login_routes.register") }}">Admin Register</a>
                         </li>
                     {% endif %}
                 {% endif %}

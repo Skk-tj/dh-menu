@@ -144,6 +144,15 @@ def build_menu_this_day(date: str, meal: int):
         return abort(400, e)
 
     if request.method == "GET":
+        # check if menu has been built for this date
+        is_menu_item_present = (db.session
+                                .query(MenuForMeal)
+                                .filter(MenuForMeal.date == datetime_object)
+                                .filter(MenuForMeal.for_which_meal == meal_enum.name).all())
+
+        if is_menu_item_present:
+            return redirect(url_for("menu_routes.edit_menu", date=date, meal=meal))
+
         # get corresponding sections for this meal
         sections = (db.session
                     .query(Sections)

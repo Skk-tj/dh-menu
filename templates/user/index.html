@@ -22,8 +22,8 @@
         {% for day in menu %}
             {% if day["is_published"] %}
                 <div class="card" data-aos="fade-up">
-                    <div class="card-header" data-bs-toggle="collapse" href="#collapse{{ loop.index }}"
-                         role="button" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
+                    <div class="card-header" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                         aria-controls="collapse{{ loop.index }}" data-bs-target="#collapse{{ loop.index }}">
                         <i class="bi bi-chevron-down"></i>
                         <span class="text-primary">{{ day["date"].strftime("%A") }}</span>
                         <span class="text-muted d-inline float-end">

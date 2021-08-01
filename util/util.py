@@ -20,7 +20,7 @@ def get_opening_time_for_date_meal(date: datetime.datetime, meal: Meal):
         (meal.name, date in ca_holiday or date.weekday() in [5, 6]))
 
 
-def _user_get_menu_for_date(date: datetime.datetime, db):
+def user_get_menu_for_date(date: datetime.datetime, db):
     meals: list[Meal] = list(Meal)
 
     full_menu = []
@@ -61,6 +61,6 @@ def user_get_menu_for_week(week_obj: isoweek.Week, db, days_shift=0):
 
     full_menu = [{"date": d,
                   "is_published": True if DaysPublished.query.get(d) else False,
-                  "menu": _user_get_menu_for_date(d, db)} for d in days[days_shift:] + days[:days_shift]]
+                  "menu": user_get_menu_for_date(d, db)} for d in days[days_shift:] + days[:days_shift]]
 
     return full_menu

@@ -65,6 +65,16 @@
                         </label>
                     {% endfor %}
                 </div>
+                <hr>
+                <div>
+                    <label class="form-label" for="copy-menu-from">Or Copy Menu From...</label>
+                    <input class="form-control" type="date" id="copy-menu-from" name="copy-menu-from">
+                    <br>
+                    <button type="button" class="btn btn-primary" disabled>
+                        <i class="bi bi-clipboard"></i>
+                        Copy
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -144,6 +154,68 @@
             }
 
             return true;
+        });
+
+        $("#copy-menu-from").change((eventObj) => {
+            // set loading animation
+            let button = eventObj.target.nextElementSibling.nextElementSibling;
+            button.innerHTML = "";
+
+            let spinner = document.createElement("span");
+            spinner.classList.add("spinner-grow");
+            spinner.classList.add("spinner-grow-sm");
+            spinner.setAttribute("role", "status");
+            spinner.setAttribute("aria-hidden", "true");
+
+            button.appendChild(spinner);
+
+            // get if we can copy
+            $.get(`${location.protocol}//${window.location.host}/api/full_menu_for_day/${eventObj.target.value}`,
+                (data) => {
+                    console.log(data);
+                    const meal_int = parseInt(location.pathname.split("/")[3]);
+
+                    if (data[meal_int].menu.length === 0) {
+                        // insert element saying we cannot copy
+                        button.innerHTML = "";
+
+                        let icon = document.createElement("i");
+                        icon.className = "bi bi-x-circle-fill";
+
+                        let text = document.createElement("span");
+                        text.innerText = " Cannot Copy";
+
+                        button.appendChild(icon);
+                        button.appendChild(text);
+                    } else {
+                        // we can copy
+                        button.innerHTML = "";
+
+                        let icon = document.createElement("i");
+                        icon.className = "bi bi-clipboard-check";
+
+                        let text = document.createElement("span");
+                        text.innerText = " Copy";
+
+                        button.appendChild(icon);
+                        button.appendChild(text);
+
+                        button.disabled = false;
+                    }
+                }
+            ).fail(function () {
+                // insert element saying we cannot copy
+                button.innerHTML = "";
+
+                let icon = document.createElement("i");
+                icon.className = "bi bi-x-circle-fill";
+
+                let text = document.createElement("span");
+                text.innerText = " Cannot Copy";
+
+                button.appendChild(icon);
+                button.appendChild(text);
+            });
         });
     </script>
 

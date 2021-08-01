@@ -52,8 +52,8 @@ def add_dish():
         return render_template("admin/dish/add_dish.html", form=form)
 
 
-@login_required
 @dish_routes.route('/manage_dish', methods=['GET'])
+@login_required
 def manage_dish():
     # make database query to get all the dishes
     try:
@@ -65,8 +65,8 @@ def manage_dish():
     return render_template("admin/dish/manage_dish.html", dishes=dishes)
 
 
-@login_required
 @dish_routes.route('/delete_dish/<string:dish_id>')
+@login_required
 def delete_dish(dish_id):
     try:
         dish_to_delete = db.session.query(Dish).get(dish_id)
@@ -80,8 +80,8 @@ def delete_dish(dish_id):
         return abort(500, e)
 
 
-@login_required
 @dish_routes.route('/edit_dish', methods=["GET", "POST"])
+@login_required
 def edit_dish():
     if "dish_id" in request.args:
         dish_id = request.args["dish_id"]

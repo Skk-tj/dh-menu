@@ -1,11 +1,12 @@
 import datetime
 import zoneinfo
 
+import dateutil.parser
 import isoweek
 from flask import Blueprint, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
-from util.util import user_get_menu_for_week
+from util.util import user_get_menu_for_week, user_get_menu_for_date
 from models.db.db_publish_version import PublishVersion
 
 menu_api = Blueprint("menu_api", __name__, url_prefix="/api")
@@ -48,6 +49,22 @@ def full_menu_for_week(week: str):
             meal["close_time"] = meal["close_time"].isoformat()
 
     return jsonify(full_menu), 200
+
+
+@menu_api.route("full_menu_for_day/<string:date>")
+def full_menu_for_day(date: str):
+    try:
+        datetime_object = dateutil.parser.isoparse(date)
+    except ValueError as e:
+        return abort(400, e)
+
+    menu_for_this_day = user_get_menu_for_date(datetime_object, db)
+
+    for meal in menu_for_this_day:
+        meal["open_time"] = meal["open_time"].isoformat()
+        meal["close_time"] = meal["close_time"].isoformat()
+
+    return jsonify(menu_for_this_day), 200
 
 
 @menu_api.route("version")

@@ -14,8 +14,8 @@ logistics_routes = Blueprint("logistics_routes", __name__, template_folder='temp
 db = SQLAlchemy()
 
 
-@login_required
 @logistics_routes.route("/set_opening_time", methods=["GET", "POST"])
+@login_required
 def set_opening_time():
     form = SetMealTimeForm()
 

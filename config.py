@@ -15,7 +15,7 @@ class Config(abc.ABC):
 
     FLASK_KEY: str
     REGISTER_OPEN: bool
-    VERSION_STRING: str = "0.0.3-demo"
+    VERSION_STRING: str = "0.0.4"
 
 
 @dataclass

@@ -70,7 +70,7 @@
                     <label class="form-label" for="copy-menu-from">Or Copy Menu From...</label>
                     <input class="form-control" type="date" id="copy-menu-from" name="copy-menu-from">
                     <br>
-                    <button type="button" class="btn btn-primary" disabled>
+                    <button type="button" class="btn btn-primary" id="copy-menu" disabled>
                         <i class="bi bi-clipboard"></i>
                         Copy
                     </button>
@@ -117,7 +117,8 @@
         });
 
         function moveSelectedHere(sectionID) {
-            const sourceDishes = document.querySelectorAll("label");
+            const sourceDishes = document.querySelectorAll("label.list-group-item.list-group-item-action");
+
             for (const dish of sourceDishes) {
                 if (dish.childNodes[1].checked) {
                     document.querySelector(`#sectionDishesList[data-section-id='${sectionID}']`).appendChild(dish);
@@ -127,7 +128,8 @@
         }
 
         function moveSelectedAway() {
-            const sourceDishes = document.querySelectorAll("label");
+            const sourceDishes = document.querySelectorAll("label.list-group-item.list-group-item-action");
+
             for (const dish of sourceDishes) {
                 if (dish.childNodes[1].checked) {
                     document.getElementById("dishesList").appendChild(dish);
@@ -158,7 +160,8 @@
 
         $("#copy-menu-from").change((eventObj) => {
             // set loading animation
-            let button = eventObj.target.nextElementSibling.nextElementSibling;
+            let button = document.querySelector("#copy-menu");
+            button.disabled = true;
             button.innerHTML = "";
 
             let spinner = document.createElement("span");
@@ -169,41 +172,44 @@
 
             button.appendChild(spinner);
 
+            let copyDoneIndicator = document.querySelector("#copy-done-indicator")
+            if (copyDoneIndicator != null) {
+                copyDoneIndicator.remove();
+            }
+
             // get if we can copy
-            $.get(`${location.protocol}//${window.location.host}/api/full_menu_for_day/${eventObj.target.value}`,
-                (data) => {
-                    console.log(data);
-                    const meal_int = parseInt(location.pathname.split("/")[3]);
+            $.get(`${location.protocol}//${window.location.host}/api/full_menu_for_day/${eventObj.target.value}`, (data) => {
+                // console.log(data);
+                const meal_int = parseInt(location.pathname.split("/")[3]);
 
-                    if (data[meal_int].menu.length === 0) {
-                        // insert element saying we cannot copy
-                        button.innerHTML = "";
+                if (data[meal_int].menu.length === 0 && meal_int !== undefined) {
+                    // insert element saying we cannot copy
+                    button.innerHTML = "";
 
-                        let icon = document.createElement("i");
-                        icon.className = "bi bi-x-circle-fill";
+                    let icon = document.createElement("i");
+                    icon.className = "bi bi-x-circle-fill";
 
-                        let text = document.createElement("span");
-                        text.innerText = " Cannot Copy";
+                    let text = document.createElement("span");
+                    text.innerText = " Cannot Copy";
 
-                        button.appendChild(icon);
-                        button.appendChild(text);
-                    } else {
-                        // we can copy
-                        button.innerHTML = "";
+                    button.appendChild(icon);
+                    button.appendChild(text);
+                } else {
+                    // we can copy
+                    button.innerHTML = "";
 
-                        let icon = document.createElement("i");
-                        icon.className = "bi bi-clipboard-check";
+                    let icon = document.createElement("i");
+                    icon.className = "bi bi-clipboard-check";
 
-                        let text = document.createElement("span");
-                        text.innerText = " Copy";
+                    let text = document.createElement("span");
+                    text.innerText = " Copy";
 
-                        button.appendChild(icon);
-                        button.appendChild(text);
+                    button.appendChild(icon);
+                    button.appendChild(text);
 
-                        button.disabled = false;
-                    }
+                    button.disabled = false;
                 }
-            ).fail(function () {
+            }).fail(() => {
                 // insert element saying we cannot copy
                 button.innerHTML = "";
 
@@ -215,6 +221,51 @@
 
                 button.appendChild(icon);
                 button.appendChild(text);
+            });
+        });
+
+        $("#copy-menu").click((eventObj) => {
+            const dateField = $("#copy-menu-from")[0];
+
+            $.get(`${location.protocol}//${window.location.host}/api/full_menu_for_day/${dateField.value}`, (data) => {
+                const meal_int = parseInt(location.pathname.split("/")[3]);
+
+                if (data[meal_int].menu.length !== 0 && meal_int !== undefined) {
+                    // move all dishes away
+                    const sourceDishes = document.querySelectorAll("label.list-group-item.list-group-item-action");
+                    for (const dish of sourceDishes) {
+                        document.getElementById("dishesList").appendChild(dish);
+                        dish.childNodes[1].checked = false;
+                    }
+
+                    // populate dishes
+                    for (const sectionMenu of data[meal_int].menu) {
+                        const targetSectionID = sectionMenu.section_id;
+                        const targetSection = document.querySelector(`#sectionDishesList[data-section-id='${targetSectionID}']`);
+
+                        for (const dish of sectionMenu.dishes) {
+                            const dishID = dish.dish_id;
+                            const sourceDishElement = document.querySelector(`label.list-group-item.list-group-item-action[data-dish-id='${dishID}']`)
+
+                            targetSection.appendChild(sourceDishElement);
+                        }
+                    }
+
+                    // show copied
+                    let copyDoneElement = document.createElement("div");
+                    copyDoneElement.className = "mt-2";
+                    copyDoneElement.id = "copy-done-indicator"
+
+                    let icon = document.createElement("i");
+                    icon.className = "bi bi-check-circle-fill text-success";
+                    copyDoneElement.appendChild(icon);
+
+                    let text = document.createElement("span");
+                    text.innerText = " Done";
+                    copyDoneElement.appendChild(text);
+
+                    dateField.parentElement.insertBefore(copyDoneElement, dateField.nextElementSibling);
+                }
             });
         });
     </script>

@@ -1,6 +1,6 @@
 # SFU Menu (Experimental)
 
-Version: 0.0.3-demo
+Version: 0.0.4-alpha
 
 Code name: OrganicPaletteSyndrome
 

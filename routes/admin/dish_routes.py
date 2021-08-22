@@ -105,7 +105,7 @@ def edit_dish():
     elif request.method == "POST":
         if form.validate_on_submit():
             try:
-                dish_to_edit = Dish.query.get(dish_id)
+                dish_to_edit = db.session.query(Dish).get(dish_id)
 
                 dish_to_edit.dish_name = form.dish_name.data
                 dish_to_edit.is_vegan = form.is_vegan.data

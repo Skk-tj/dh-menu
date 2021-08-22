@@ -19,7 +19,7 @@ def hello_world():
     this_week: isoweek.Week = isoweek.Week(*(today.isocalendar()[:2]))
 
     # get menu for days
-    menu = user_get_menu_for_week(this_week, db, today.weekday())
+    menu = user_get_menu_for_week(this_week, today.weekday())
 
     is_empty = [day["is_published"] for day in menu]
 
@@ -35,7 +35,7 @@ def view_week(week):
     except ValueError as e:
         return abort(400, e)
 
-    menu = user_get_menu_for_week(week_obj, db)
+    menu = user_get_menu_for_week(week_obj)
 
     is_empty = [day["is_published"] for day in menu]
 

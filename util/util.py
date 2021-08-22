@@ -22,15 +22,15 @@ def get_opening_time_for_date_meal(date: datetime.datetime, meal: Meal):
         (meal.name, date in ca_holiday or date.weekday() in [5, 6]))
 
 
-def user_get_menu_for_date(date: datetime.datetime, db):
+def user_get_menu_for_date(date: datetime.datetime):
     meals: list[Meal] = list(Meal)
 
     full_menu = []
 
     for meal in meals:
         try:
-            menu_db_result = (db.session
-                              .query(MenuForMeal.section_id, Sections, Dish)
+            menu_db_result = (MenuForMeal.query
+                              .with_entities(MenuForMeal.section_id, Sections, Dish)
                               .join(Sections)
                               .join(Dish)
                               .join(DaysPublished, DaysPublished.date == MenuForMeal.date)
@@ -40,8 +40,6 @@ def user_get_menu_for_date(date: datetime.datetime, db):
                               .order_by(Sections.section_name).all())
         except sqlalchemy.exc.SQLAlchemyError as e:
             raise e
-        finally:
-            db.session.remove()
 
         menu_for_meal = []
 
@@ -63,12 +61,12 @@ def user_get_menu_for_date(date: datetime.datetime, db):
     return full_menu
 
 
-def user_get_menu_for_week(week_obj: isoweek.Week, db, days_shift=0):
+def user_get_menu_for_week(week_obj: isoweek.Week, days_shift=0):
     days = week_obj.days()
 
     full_menu = [{"date": d,
                   "is_published": True if DaysPublished.query.get(d) else False,
-                  "menu": user_get_menu_for_date(d, db)} for d in days[days_shift:] + days[:days_shift]]
+                  "menu": user_get_menu_for_date(d)} for d in days[days_shift:] + days[:days_shift]]
 
     return full_menu
 

@@ -78,9 +78,8 @@ def _get_sections_dict() -> dict:
 
     for meal in list(Meal):
         sections_dict[meal] = [(_.section_name, _.section_id)
-                               for _ in (db.session
-                                         .query(Sections.section_name,
-                                                Sections.section_id)
+                               for _ in (Sections.query
+                                         .with_entities(Sections.section_name, Sections.section_id)
                                          .filter(Sections.section_for_which_meal == meal.name)
                                          .order_by(Sections.section_name).all())]
 
@@ -112,7 +111,7 @@ def _update_publish_version() -> uuid.UUID:
     Update the public version of the menu.
     :return: The new version in UUID format.
     """
-    version = db.session.query(PublishVersion).first()
+    version = PublishVersion.query.first()
     version.id = uuid.uuid4()
     db.session.commit()
 

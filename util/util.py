@@ -1,16 +1,18 @@
 import holidays
 import isoweek
+import sqlalchemy.exc
 
 from models.db.db_meal_time import MealTime
 
 from models.db.db_days_published import DaysPublished
 from models.db.db_dish_model import Dish
 from models.db.db_menu_for_meal_model import MenuForMeal
+from models.db.db_message_of_the_day_model import MessageOfTheDay
 from models.db.db_sections_model import Sections
 from models.meal_enum import Meal
 
 import datetime
-from itertools import groupby
+from itertools import groupby, chain
 
 
 def get_opening_time_for_date_meal(date: datetime.datetime, meal: Meal):
@@ -26,15 +28,20 @@ def user_get_menu_for_date(date: datetime.datetime, db):
     full_menu = []
 
     for meal in meals:
-        menu_db_result = (db.session
-                          .query(MenuForMeal.section_id, Sections, Dish)
-                          .join(Sections)
-                          .join(Dish)
-                          .join(DaysPublished, DaysPublished.date == MenuForMeal.date)
-                          .filter(MenuForMeal.date == date)
-                          .filter(MenuForMeal.for_which_meal == meal.name)
-                          .filter(DaysPublished.is_published)
-                          .order_by(Sections.section_name).all())
+        try:
+            menu_db_result = (db.session
+                              .query(MenuForMeal.section_id, Sections, Dish)
+                              .join(Sections)
+                              .join(Dish)
+                              .join(DaysPublished, DaysPublished.date == MenuForMeal.date)
+                              .filter(MenuForMeal.date == date)
+                              .filter(MenuForMeal.for_which_meal == meal.name)
+                              .filter(DaysPublished.is_published)
+                              .order_by(Sections.section_name).all())
+        except sqlalchemy.exc.SQLAlchemyError as e:
+            raise e
+        finally:
+            db.session.remove()
 
         menu_for_meal = []
 
@@ -64,3 +71,19 @@ def user_get_menu_for_week(week_obj: isoweek.Week, db, days_shift=0):
                   "menu": user_get_menu_for_date(d, db)} for d in days[days_shift:] + days[:days_shift]]
 
     return full_menu
+
+
+def user_get_message_for_date(date: datetime.datetime):
+    messages = MessageOfTheDay.query.filter(MessageOfTheDay.date == date).all()
+
+    return messages
+
+
+def user_get_messages_for_week(week_obj: isoweek.Week):
+    days = week_obj.days()
+
+    messages_in_week = [user_get_message_for_date(day) for day in days]
+
+    messages_in_week = list(chain.from_iterable(messages_in_week))
+
+    return messages_in_week

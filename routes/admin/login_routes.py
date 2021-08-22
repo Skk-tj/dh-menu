@@ -29,7 +29,7 @@ def login():
     elif request.method == "POST":
         if login_form.validate_on_submit():
             try:
-                user = db.session.query(User).get(login_form.username.data)
+                user = User.query.get(login_form.username.data)
             except sqlalchemy.exc.SQLAlchemyError as e:
                 return abort(500, e)
 
@@ -77,7 +77,7 @@ def register():
             proposed_user_id = register_form.username.data
 
             try:
-                user = db.session.query(User).get(proposed_user_id)
+                user = User.query.get(proposed_user_id)
             except sqlalchemy.exc.SQLAlchemyError as e:
                 return abort(500, e)
 

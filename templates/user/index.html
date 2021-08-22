@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% from "flash_alert.html" import flash_alert %}
+{% from "message.html" import message %}
 
 {% block title %}This Week - SFU Dining Hall{% endblock %}
 
@@ -18,6 +19,10 @@
             {{ this_week.monday().strftime("%A %b %-d, %Y") }}
             &ndash; {{ this_week.sunday().strftime("%A %b %-d, %Y") }}
         </h4>
+
+        {% for m in messages %}
+            {{ message(m.message_title, m.date, m.message_description) }}
+        {% endfor %}
 
         {% for day in menu %}
             {% if day["is_published"] %}

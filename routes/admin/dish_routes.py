@@ -69,7 +69,7 @@ def manage_dish():
 @login_required
 def delete_dish(dish_id):
     try:
-        dish_to_delete = db.session.query(Dish).get(dish_id)
+        dish_to_delete = Dish.query.get(dish_id)
         db.session.delete(dish_to_delete)
         db.session.commit()
 
@@ -92,7 +92,7 @@ def edit_dish():
 
     if request.method == "GET":
         try:
-            dish_to_edit = db.session.query(Dish).get(dish_id)
+            dish_to_edit = Dish.query.get(dish_id)
 
             form.annotation.data = dish_to_edit.annotation
             form.for_which_meal.data = str(Meal[dish_to_edit.for_which_meal].value)
@@ -105,7 +105,7 @@ def edit_dish():
     elif request.method == "POST":
         if form.validate_on_submit():
             try:
-                dish_to_edit = db.session.query(Dish).get(dish_id)
+                dish_to_edit = Dish.query.get(dish_id)
 
                 dish_to_edit.dish_name = form.dish_name.data
                 dish_to_edit.is_vegan = form.is_vegan.data

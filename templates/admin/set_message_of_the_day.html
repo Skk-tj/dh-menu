@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% from "flash_alert.html" import flash_alert %}
+{% from "message.html" import message %}
+
+{% block title %}Set Message Of The Day - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        {{ flash_alert() }}
+
+        <h1>Set Message Of The Day</h1>
+        <h4 class="text-muted">Announce special events and display the message on top of the menu</h4>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-floating">
+                {% if default_date %}
+                    {{ form.date(class_="form-control", id="messageDateField", value=default_date) }}
+                {% else %}
+                    {{ form.date(class_="form-control", id="messageDateField") }}
+                {% endif %}
+
+                {{ form.date.label }}
+                <div class="form-text"><i class="text-muted">[Required]</i></div>
+                {% for error in form.date.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <br>
+
+            <div class="form-group">
+                {{ form.message_title.label }}
+                {{ form.message_title(class_="form-control", id="messageTitleField") }}
+                <div class="form-text"><i>[Required]</i></div>
+                {% for error in form.message_title.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <br>
+
+            <div class="form-group">
+                {{ form.message_description.label }}
+                {{ form.message_description(class_="form-control", id="messageDescriptionField") }}
+                <div class="form-text"><i>[Required]</i></div>
+                {% for error in form.message_description.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <br>
+
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+
+        <hr>
+
+        <h1>Preview</h1>
+
+        {{ message("Message Title", "Date", "Message Content") }}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $("#messageTitleField").on("input", (eventObj) => {
+            let messageTitle = document.querySelector("#messageHeading");
+            messageTitle.innerHTML = eventObj.target.value;
+        });
+
+        $("#messageDateField").change((eventObj) => {
+            let messageDate = document.querySelector("#messageDate");
+            const date = new Date(eventObj.target.value);
+            messageDate.innerHTML = date.toDateString();
+        });
+
+        $("#messageDescriptionField").on("input", (eventObj) => {
+            let messageContent = document.querySelector("#messageContent");
+            messageContent.innerHTML = eventObj.target.value;
+        });
+    </script>
+{% endblock %}

@@ -265,7 +265,7 @@ def publish_date(date: str):
         if request.referrer:
             return redirect(request.referrer)
         else:
-            abort(400, "No referrer, you must interact via the user interface. ")
+            return abort(400, "No referrer, you must interact via the user interface. ")
     except sqlalchemy.exc.SQLAlchemyError as e:
         return abort(500, e)
 

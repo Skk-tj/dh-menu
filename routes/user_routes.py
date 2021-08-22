@@ -5,7 +5,7 @@ import isoweek
 from flask import Blueprint, render_template, abort
 from flask_sqlalchemy import SQLAlchemy
 
-from util.util import user_get_menu_for_week
+from util.util import user_get_menu_for_week, user_get_messages_for_week
 
 user_routes = Blueprint("user_routes", __name__, template_folder='templates/')
 
@@ -23,7 +23,9 @@ def hello_world():
 
     is_empty = [day["is_published"] for day in menu]
 
-    return render_template("user/index.html", menu=menu, is_empty=is_empty, this_week=this_week)
+    messages = user_get_messages_for_week(this_week)
+
+    return render_template("user/index.html", menu=menu, is_empty=is_empty, this_week=this_week, messages=messages)
 
 
 @user_routes.route("/<string:week>")
@@ -37,7 +39,9 @@ def view_week(week):
 
     is_empty = [day["is_published"] for day in menu]
 
-    return render_template("user/index.html", menu=menu, is_empty=is_empty, this_week=week_obj)
+    messages = user_get_messages_for_week(week_obj)
+
+    return render_template("user/index.html", menu=menu, is_empty=is_empty, this_week=week_obj, messages=messages)
 
 
 @user_routes.route('/panic')

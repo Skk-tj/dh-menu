@@ -120,12 +120,20 @@
 
                         </table>
                     {% endfor %}
+
                     <br>
+                    <a class="btn btn-success"
+                       href="{{ url_for("logistics_routes.messages_of_the_day", date=day["date"].isoformat()) }}"
+                       role="button"
+                       aria-disabled="false">
+                        <i class="bi bi-chat-left-text-fill"></i> Messages
+                    </a>
+
                     {% if not day["is_published"] %}
-                        <a class="btn btn-success"
+                        <a class="btn btn-primary"
                            href="{{ url_for("menu_routes.publish_date", date=day["date"].isoformat()) }}"
                            role="button"
-                           aria-disabled="{{ "true" if not menu }}" tabindex="{{ "-1" if not menu }}">
+                           aria-disabled="false">
                             <i class="bi bi-broadcast"></i> Publish
                         </a>
                     {% else %}

@@ -1,0 +1,8 @@
+{% macro message(title, date, description) -%}
+    <div class="alert alert-primary" role="alert">
+        <h4 class="alert-heading" id="messageHeading">{{ title }}</h4>
+        <p class="text-muted" id="messageDate">{{ date }}</p>
+        <hr>
+        <p class="mb-0" id="messageContent">{{ description }}</p>
+    </div>
+{%- endmacro %}

@@ -153,13 +153,11 @@ def build_menu_this_day(date: str, meal: int):
             return redirect(url_for("menu_routes.edit_menu", date=date, meal=meal))
 
         # get corresponding sections for this meal
-        sections = (db.session
-                    .query(Sections)
+        sections = (Sections.query
                     .filter(Sections.section_for_which_meal == meal_enum.name)
                     .order_by(Sections.section_name))
 
-        list_of_dishes = (db.session
-                          .query(Dish)
+        list_of_dishes = (Dish.query
                           .filter(Dish.for_which_meal == meal_enum.name)
                           .order_by(Dish.dish_name))
 

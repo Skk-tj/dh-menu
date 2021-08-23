@@ -36,11 +36,12 @@ def set_opening_time():
         # overwrite the database entry
         if form.validate_on_submit():
             try:
-                to_edit = db.session.query(MealTime).get((Meal(int(form.meal.data)).name, form.is_work_day.data))
+                to_edit = MealTime.query.get((Meal(int(form.meal.data)).name, form.is_work_day.data))
 
                 to_edit.time_open = form.meal_start.data
                 to_edit.time_close = form.meal_end.data
 
+                db.session.merge(to_edit)
                 db.session.commit()
 
                 flash("Opening Time Edited", "alert-success")

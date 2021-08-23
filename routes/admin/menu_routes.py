@@ -278,7 +278,7 @@ def undo_publish_date(date: str):
     except ValueError:
         return abort(400)
 
-    res = DaysPublished.query.get(datetime_object.isoformat())
+    res = db.session.query(DaysPublished).get(datetime_object.isoformat())
 
     if res:
         try:

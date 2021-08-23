@@ -15,12 +15,9 @@ from models.db.db_dish_model import Dish
 from models.db.db_menu_for_meal_model import MenuForMeal
 from models.db.db_publish_version_model import PublishVersion
 from models.db.db_sections_model import Sections
-
 from models.form.build_menu_select_form import BuildMenuSelectForm
 from models.form.publish_menu_select_form import PublishMenuSelectForm
-
 from models.meal_enum import Meal
-
 from util.util import get_opening_time_for_date_meal
 
 menu_routes = Blueprint("menu_routes", __name__, template_folder='templates/')
@@ -56,11 +53,10 @@ def _get_menu_status_for_date(date: datetime.datetime) -> dict:
 
 
 def _get_full_menu_for_date_meal(date: datetime.datetime, meal: Meal) -> dict:
-    menu_db_result = (db.session
-                      .query(MenuForMeal.id,
-                             Sections,
-                             Dish)
-                      .join(Sections).join(Dish)
+    menu_db_result = (MenuForMeal.query
+                      .with_entities(MenuForMeal.id, Sections, Dish)
+                      .join(Sections)
+                      .join(Dish)
                       .filter(MenuForMeal.date == date)
                       .filter(MenuForMeal.for_which_meal == meal.name)
                       .order_by(Sections.section_name).all())
@@ -315,19 +311,17 @@ def edit_menu(date: str, meal: int):
         date_string = datetime_object.strftime("%A %b %-d, %Y")
 
         # get corresponding sections for this meal
-        sections = (db.session
-                    .query(Sections)
-                    .filter(Sections.section_for_which_meal == meal_enum.name)
-                    .order_by(Sections.section_name).all())
+        sections: list[Sections] = (Sections.query
+                                    .filter(Sections.section_for_which_meal == meal_enum.name)
+                                    .order_by(Sections.section_name).all())
 
         # get dishes in sections
         menu = _get_full_menu_for_date_meal(datetime_object, meal_enum)
 
         # get the all dishes for this type of meal
-        total_list_of_dishes = (db.session
-                                .query(Dish)
-                                .filter(Dish.for_which_meal == meal_enum.name)
-                                .order_by(Dish.dish_name).all())
+        total_list_of_dishes: list[Dish] = (Dish.query
+                                            .filter(Dish.for_which_meal == meal_enum.name)
+                                            .order_by(Dish.dish_name).all())
 
         dishes_in_sections = [item for sublist in menu.values() for item in sublist]
 

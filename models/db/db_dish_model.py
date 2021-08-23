@@ -1,3 +1,5 @@
+import dataclasses
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects import postgresql
 
@@ -31,6 +33,12 @@ class Dish(db.Model):
         self.is_gluten_free = is_gluten_free
         self.annotation = annotation
         self.for_which_meal = for_which_meal
+
+    def __hash__(self):
+        return hash(self.dish_id)
+
+    def __eq__(self, other):
+        return self.dish_id == other.dish_id
 
     def to_dict(self):
         return {

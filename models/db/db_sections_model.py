@@ -19,3 +19,9 @@ class Sections(db.Model):
         self.section_id = section_id
         self.section_name = section_name
         self.section_for_which_meal = section_for_which_meal
+
+    def __hash__(self):
+        return hash(self.section_id)
+
+    def __eq__(self, other):
+        return self.section_id == other.section_id

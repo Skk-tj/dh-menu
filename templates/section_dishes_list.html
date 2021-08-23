@@ -1,0 +1,35 @@
+{% macro section_dishes_list(section, dishes) -%}
+    <ul class="list-group">
+        <li class="list-group-item active">{{ section.section_name }}</li>
+        {% for dish in dishes %}
+            <li class="list-group-item">
+                <div>
+                    <div>
+                        <span>{{ dish.dish_name }}</span>
+
+                        {% if dish.is_vegan %}
+                            <span class="badge rounded-pill bg-success">Vegan</span>
+                        {% endif %}
+
+                        {% if dish.is_vegetarian %}
+                            <span class="badge rounded-pill bg-success">Vegetarian</span>
+                        {% endif %}
+
+                        {% if dish.is_halal %}
+                            <span class="badge rounded-pill bg-primary">Halal</span>
+                        {% endif %}
+
+                        {% if dish.is_gluten_free %}
+                            <span class="badge rounded-pill bg-info">Gluten Free</span>
+                        {% endif %}
+
+                    </div>
+                    {% if dish.annotation %}
+                        <small class="text-muted">{{ dish.annotation }}</small>
+                    {% endif %}
+                </div>
+
+            </li>
+        {% endfor %}
+    </ul>
+{%- endmacro %}

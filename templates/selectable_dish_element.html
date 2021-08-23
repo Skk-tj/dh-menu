@@ -1,0 +1,22 @@
+{% macro selectable_dish_element(dish) -%}
+    <label class="list-group-item list-group-item-action" data-dish-id="{{ dish.dish_id }}">
+        <input class="form-check-input me-1" type="checkbox" value="">
+        <span>{{ dish.dish_name }}</span>
+
+        {% if dish.is_vegan %}
+            <span class="badge bg-success">Vegan</span>
+        {% endif %}
+
+        {% if dish.is_vegetarian %}
+            <span class="badge bg-success">Vegetarian</span>
+        {% endif %}
+
+        {% if dish.is_halal %}
+            <span class="badge bg-primary">Halal</span>
+        {% endif %}
+
+        {% if dish.is_gluten_free %}
+            <span class="badge bg-info">Gluten Free</span>
+        {% endif %}
+    </label>
+{%- endmacro %}

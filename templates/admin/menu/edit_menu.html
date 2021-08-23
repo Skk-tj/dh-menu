@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from "selectable_dish_element.html" import selectable_dish_element %}
 
 {% block title %}Edit Menu - SFU Dining Hall{% endblock %}
 
@@ -25,26 +26,7 @@
 
                     <div id="sectionDishesList" class="list-group" data-section-id="{{ section.section_id }}">
                         {% for dish in menu[section] %}
-                            <label class="list-group-item list-group-item-action" data-dish-id="{{ dish.dish_id }}">
-                                <input class="form-check-input me-1" type="checkbox" value="">
-                                <span>{{ dish.dish_name }}</span>
-
-                                {% if dish.is_vegan %}
-                                    <span class="badge bg-success">Vegan</span>
-                                {% endif %}
-
-                                {% if dish.is_vegetarian %}
-                                    <span class="badge bg-success">Vegetarian</span>
-                                {% endif %}
-
-                                {% if dish.is_halal %}
-                                    <span class="badge bg-primary">Halal</span>
-                                {% endif %}
-
-                                {% if dish.is_gluten_free %}
-                                    <span class="badge bg-info">Gluten Free</span>
-                                {% endif %}
-                            </label>
+                            {{ selectable_dish_element(dish) }}
                         {% endfor %}
                     </div>
                     <br>
@@ -67,26 +49,7 @@
                 </button>
                 <div id="dishesList" class="list-group mt-3">
                     {% for dish in list_of_dishes %}
-                        <label class="list-group-item list-group-item-action" data-dish-id="{{ dish.dish_id }}">
-                            <input class="form-check-input me-1" type="checkbox" value="">
-                            <span>{{ dish.dish_name }}</span>
-
-                            {% if dish.is_vegan %}
-                                <span class="badge bg-success">Vegan</span>
-                            {% endif %}
-
-                            {% if dish.is_vegetarian %}
-                                <span class="badge bg-success">Vegetarian</span>
-                            {% endif %}
-
-                            {% if dish.is_halal %}
-                                <span class="badge bg-primary">Halal</span>
-                            {% endif %}
-
-                            {% if dish.is_gluten_free %}
-                                <span class="badge bg-info">Gluten Free</span>
-                            {% endif %}
-                        </label>
+                        {{ selectable_dish_element(dish) }}
                     {% endfor %}
                 </div>
             </div>

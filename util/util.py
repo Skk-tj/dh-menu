@@ -2,9 +2,9 @@ import holidays
 import isoweek
 import sqlalchemy.exc
 
-from models.db.db_meal_time import MealTime
+from models.db.db_meal_time_model import MealTime
 
-from models.db.db_days_published import DaysPublished
+from models.db.db_days_published_model import DaysPublished
 from models.db.db_dish_model import Dish
 from models.db.db_menu_for_meal_model import MenuForMeal
 from models.db.db_message_of_the_day_model import MessageOfTheDay

@@ -10,14 +10,17 @@ from flask import Blueprint, render_template, redirect, url_for, abort, request,
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
-from models.db.db_days_published import DaysPublished
+from models.db.db_days_published_model import DaysPublished
 from models.db.db_dish_model import Dish
 from models.db.db_menu_for_meal_model import MenuForMeal
+from models.db.db_publish_version_model import PublishVersion
 from models.db.db_sections_model import Sections
-from models.db.db_publish_version import PublishVersion
+
 from models.form.build_menu_select_form import BuildMenuSelectForm
 from models.form.publish_menu_select_form import PublishMenuSelectForm
+
 from models.meal_enum import Meal
+
 from util.util import get_opening_time_for_date_meal
 
 menu_routes = Blueprint("menu_routes", __name__, template_folder='templates/')
@@ -275,7 +278,7 @@ def undo_publish_date(date: str):
     except ValueError:
         return abort(400)
 
-    res = db.session.query(DaysPublished).get(datetime_object.isoformat())
+    res = DaysPublished.query.get(datetime_object.isoformat())
 
     if res:
         try:

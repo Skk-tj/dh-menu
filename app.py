@@ -4,11 +4,13 @@ from flask_login import LoginManager
 
 import config
 
-from models.db.db_days_published import db as days_published_db
+from models.db.db_days_published_model import db as days_published_db
 from models.db.db_dish_model import db as dish_db
-from models.db.db_meal_time import db as opening_time_db
+from models.db.db_meal_time_model import db as opening_time_db
 from models.db.db_menu_for_meal_model import db as menu_for_meal_db
 from models.db.db_sections_model import db as sections_db
+from models.db.db_message_of_the_day_model import db as message_of_the_day_db
+from models.db.db_publish_version_model import db as publish_version_db
 from models.db.db_user_model import User
 
 from routes.admin.dish_routes import db as dish_routes_db
@@ -48,6 +50,8 @@ menu_for_meal_db.init_app(app)
 days_published_db.init_app(app)
 sections_db.init_app(app)
 opening_time_db.init_app(app)
+message_of_the_day_db.init_app(app)
+publish_version_db.init_app(app)
 
 # Routes DB Init
 menu_routes_db.init_app(app)

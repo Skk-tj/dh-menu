@@ -7,7 +7,7 @@ from flask import Blueprint, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 from util.util import user_get_menu_for_week, user_get_menu_for_date
-from models.db.db_publish_version import PublishVersion
+from models.db.db_publish_version_model import PublishVersion
 
 menu_api = Blueprint("menu_api", __name__, url_prefix="/api")
 

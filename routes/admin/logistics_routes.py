@@ -7,7 +7,7 @@ from flask import Blueprint, request, render_template, redirect, url_for, abort,
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
-from models.db.db_meal_time import MealTime
+from models.db.db_meal_time_model import MealTime
 from models.db.db_message_of_the_day_model import MessageOfTheDay
 from models.form.message_of_the_day_form import MessageOfTheDayForm
 from models.form.set_meal_time_form import SetMealTimeForm
@@ -98,7 +98,7 @@ def messages_of_the_day(date: str):
 @login_required
 def delete_message(message_id: str):
     try:
-        message = MessageOfTheDay.query.get(message_id)
+        message = db.session.query(MessageOfTheDay).get(message_id)
         db.session.delete(message)
         db.session.commit()
 

@@ -69,7 +69,7 @@ def manage_dish():
 @login_required
 def delete_dish(dish_id):
     try:
-        dish_to_delete = Dish.query.get(dish_id)
+        dish_to_delete = db.session.query(Dish).get(dish_id)
         db.session.delete(dish_to_delete)
         db.session.commit()
 

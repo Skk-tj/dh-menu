@@ -14,7 +14,7 @@
             <div class="form-group">
                 {{ form.dish_name.label }}
                 {{ form.dish_name(class_="form-control") }}
-                <div class="form-text"><i>[Required]</i></div>
+                <div class="form-text"><i>[Required, words will be capitalized automatically. ]</i></div>
                 {% for error in form.dish_name.errors %}
                     <span class="text-danger">{{ error }}</span>
                 {% endfor %}

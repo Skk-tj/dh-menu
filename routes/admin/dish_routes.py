@@ -29,7 +29,7 @@ def add_dish():
             form.uuid = uuid.uuid4()
 
             new_dish = Dish(form.uuid,
-                            form.dish_name.data.capitalize(),
+                            form.dish_name.data.title(),
                             form.is_vegan.data,
                             form.is_vegetarian.data,
                             form.is_halal.data,

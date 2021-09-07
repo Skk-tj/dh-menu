@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% from "flash_alert.html" import flash_alert %}
+
+{% block title %}Change Section Name - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        {{ flash_alert() }}
+
+        <h1>Change Section Name</h1>
+
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Original Name" aria-label="Original Name"
+                       value="{{ original_name }}" readonly>
+                <span class="input-group-text">→</span>
+                {{ form.new_name(class_="form-control", placeholder="New Name") }}
+            </div>
+            {% for error in form.new_name.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+    </div>
+{% endblock %}

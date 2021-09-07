@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% from "flash_alert.html" import flash_alert %}
+
+{% block title %}Add Section - SFU Dining Hall{% endblock %}
+
+{% block content %}
+    <br>
+
+    <div class="container">
+        {{ flash_alert() }}
+
+        <h1>Add Section</h1>
+
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.section_name.label }}
+                {{ form.section_name(class_="form-control") }}
+                <div class="form-text"><i>[Required, words will be capitalized automatically. ]</i></div>
+                {% for error in form.section_name.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <br>
+
+            <div class="form-floating">
+                {{ form.for_which_meal(class_="form-control") }}
+                {{ form.for_which_meal.label }}
+                <div class="form-text"><i>[Required]</i></div>
+                {% for error in form.for_which_meal.errors %}
+                    <span class="text-danger">{{ error }}</span>>
+                {% endfor %}
+            </div>
+            <br>
+
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+    </div>
+{% endblock %}

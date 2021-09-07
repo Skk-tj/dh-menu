@@ -15,7 +15,9 @@ from models.db.db_dish_model import Dish
 from models.db.db_menu_for_meal_model import MenuForMeal
 from models.db.db_publish_version_model import PublishVersion
 from models.db.db_sections_model import Sections
+from models.form.add_section_form import AddSectionForm
 from models.form.build_menu_select_form import BuildMenuSelectForm
+from models.form.change_section_name_form import ChangeSectionNameForm
 from models.form.publish_menu_select_form import PublishMenuSelectForm
 from models.meal_enum import Meal
 from util.util import get_opening_time_for_date_meal
@@ -238,6 +240,90 @@ def manage_sections():
     sections_dict = _get_sections_dict()
 
     return render_template("admin/menu/manage_sections.html", sections_dict=sections_dict)
+
+
+@menu_routes.route("/add_section", methods=["GET", "POST"])
+@login_required
+def add_section():
+    form = AddSectionForm()
+
+    if request.method == "GET":
+        return render_template("admin/menu/add_section.html", form=form)
+    elif request.method == "POST":
+        if form.validate_on_submit():
+            try:
+                meal_string = Meal(int(form.for_which_meal.data)).name
+            except ValueError as e:
+                return abort(400, e)
+
+            # try to find a section that has the same name
+            same_name_section = (Sections.query
+                                 .filter(Sections.section_name == form.section_name.data)
+                                 .filter(Sections.section_for_which_meal == meal_string).first())
+
+            if same_name_section:
+                flash("This section already exists. ", "alert-danger")
+                return redirect(url_for("menu_routes.add_section"))
+
+            new_section = Sections(section_id=uuid.uuid4(),
+                                   section_name=form.section_name.data.title(),
+                                   section_for_which_meal=meal_string)
+
+            try:
+                db.session.add(new_section)
+                db.session.commit()
+
+                flash("A section has been successfully added.", "alert-success")
+            except sqlalchemy.exc.SQLAlchemyError as e:
+                return abort(500, e)
+
+            return redirect(url_for("menu_routes.manage_sections"))
+        else:
+            return render_template("admin/menu/add_section.html", form=form)
+
+
+@menu_routes.route("/delete_section/<string:section_id>")
+@login_required
+def delete_section(section_id: str):
+    try:
+        section_to_delete = db.session.query(Sections).get(section_id)
+        db.session.delete(section_to_delete)
+        db.session.commit()
+
+        flash("A section has been successfully deleted. ", "alert-success")
+
+        return redirect(url_for("menu_routes.manage_sections"))
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        return abort(500, e)
+
+
+@menu_routes.route("/edit_section_name/<string:section_id>", methods=["GET", "POST"])
+@login_required
+def edit_section_name(section_id: str):
+    form = ChangeSectionNameForm()
+    try:
+        section_to_edit: Sections = Sections.query.get(section_id)
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        return abort(500, e)
+
+    if request.method == "GET":
+        return render_template("admin/menu/change_section_name.html", form=form,
+                               original_name=section_to_edit.section_name)
+    elif request.method == "POST":
+        if form.validate_on_submit():
+            try:
+                section_to_edit.section_name = form.new_name.data
+
+                db.session.merge(section_to_edit)
+                db.session.commit()
+
+                flash("The section has been edited successfully. ", "alert-success")
+
+                return redirect(url_for("menu_routes.manage_sections"))
+            except sqlalchemy.exc.SQLAlchemyError as e:
+                return abort(500, e)
+        else:
+            return redirect(url_for("menu_routes.edit_section_name", section_id=section_id))
 
 
 @menu_routes.route("/publish/<string:date>")

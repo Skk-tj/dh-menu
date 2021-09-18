@@ -3,15 +3,13 @@ import uuid
 import sqlalchemy.exc
 from flask import Blueprint, render_template, redirect, url_for, abort, request, flash
 from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
 
+from app import db
 from models.db.db_dish_model import Dish
 from models.form.add_dish_form import AddDishForm
 from models.meal_enum import Meal
 
 dish_routes = Blueprint("dish_routes", __name__, template_folder='templates/')
-
-db = SQLAlchemy()
 
 
 @dish_routes.route('/add_dish', methods=['GET', 'POST'])

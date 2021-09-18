@@ -1,9 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects import postgresql
 
 import config
-
-db = SQLAlchemy()
+from app import db
 
 
 class PublishVersion(db.Model):

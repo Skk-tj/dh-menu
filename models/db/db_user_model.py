@@ -1,10 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects import postgresql
 from flask_login import UserMixin
 
 import config
 
-db = SQLAlchemy()
+from app import db
 
 
 class User(db.Model, UserMixin):

@@ -3,13 +3,10 @@ import zoneinfo
 
 import isoweek
 from flask import Blueprint, render_template, abort
-from flask_sqlalchemy import SQLAlchemy
 
 from util.util import user_get_menu_for_week, user_get_messages_for_week
 
 user_routes = Blueprint("user_routes", __name__, template_folder='templates/')
-
-db = SQLAlchemy()
 
 
 @user_routes.route('/')

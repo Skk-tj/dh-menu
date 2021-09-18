@@ -5,8 +5,8 @@ import dateutil.parser
 import sqlalchemy.exc
 from flask import Blueprint, request, render_template, redirect, url_for, abort, flash
 from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
 
+from app import db
 from models.db.db_meal_time_model import MealTime
 from models.db.db_message_of_the_day_model import MessageOfTheDay
 from models.form.message_of_the_day_form import MessageOfTheDayForm
@@ -14,8 +14,6 @@ from models.form.set_meal_time_form import SetMealTimeForm
 from models.meal_enum import Meal
 
 logistics_routes = Blueprint("logistics_routes", __name__, template_folder='templates/')
-
-db = SQLAlchemy()
 
 
 @logistics_routes.route("/set_opening_time", methods=["GET", "POST"])

@@ -17,6 +17,7 @@ holidays = "*"
 gunicorn = "*"
 flask-login = "*"
 bcrypt = "*"
+flask-migrate = "*"
 
 [dev-packages]
 pytest = "*"

@@ -1,23 +1,18 @@
 from datetime import timedelta
 from functools import wraps
 
+import bcrypt
 import sqlalchemy.exc
-from flask import Blueprint, abort, request, render_template, flash, redirect, url_for, g
+from flask import Blueprint, abort, request, render_template, flash, redirect, url_for
 from flask_login import logout_user, login_user, login_required
-from flask_sqlalchemy import SQLAlchemy
 
+import config
+from app import db
+from models.db.db_user_model import User
 from models.form.login_form import LoginForm
 from models.form.register_form import RegisterForm
 
-from models.db.db_user_model import User
-
-import config
-
-import bcrypt
-
 login_routes = Blueprint("login_routes", __name__, template_folder='templates/')
-
-db = SQLAlchemy()
 
 
 @login_routes.route("/login", methods=["GET", "POST"])

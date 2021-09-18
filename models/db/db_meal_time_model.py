@@ -1,11 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects import postgresql
 
-from models.db.db_meal_enum import meal_enum_sql
-
 import config
-
-db = SQLAlchemy()
+from app import db
+from models.db.db_meal_enum import meal_enum_sql
 
 
 class MealTime(db.Model):

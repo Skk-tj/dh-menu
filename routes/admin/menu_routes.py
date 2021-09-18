@@ -8,8 +8,8 @@ import isoweek
 import sqlalchemy.exc
 from flask import Blueprint, render_template, redirect, url_for, abort, request, flash
 from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
 
+from app import db
 from models.db.db_days_published_model import DaysPublished
 from models.db.db_dish_model import Dish
 from models.db.db_menu_for_meal_model import MenuForMeal
@@ -23,8 +23,6 @@ from models.meal_enum import Meal
 from util.util import get_opening_time_for_date_meal
 
 menu_routes = Blueprint("menu_routes", __name__, template_folder='templates/')
-
-db = SQLAlchemy()
 
 
 def _get_menu_status_for_date(date: datetime.datetime) -> dict:

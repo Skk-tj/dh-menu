@@ -10,12 +10,14 @@ class Config(abc.ABC):
     Abstract Config data class, do not instantiate this class.
     """
 
-    DATABASE_URL: str
+    SQLALCHEMY_DATABASE_URI: str
     DATABASE_SCHEMA: str
 
-    FLASK_KEY: str
+    SECRET_KEY: str
     REGISTER_OPEN: bool
     VERSION_STRING: str = "0.0.5"
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+    SQLALCHEMY_ECHO: bool = False
 
 
 @dataclass
@@ -31,7 +33,11 @@ class TestConfig(Config):
                          envparse.env.bool("TEST_REGISTER_OPEN", default=True))
 
 
+@dataclass
 class ProductionConfig(Config):
+    """
+    Config data class for production.
+    """
     def __init__(self):
         super().__init__(envparse.env.str("DATABASE_URL"),
                          envparse.env.str("DATABASE_SCHEMA"),

@@ -1,13 +1,9 @@
-import dataclasses
-
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects import postgresql
 
 import config
+from app import db
 from models.db.db_meal_enum import meal_enum_sql
 from models.meal_enum import Meal
-
-db = SQLAlchemy()
 
 
 class Dish(db.Model):

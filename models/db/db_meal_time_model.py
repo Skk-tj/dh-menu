@@ -1,12 +1,10 @@
 from sqlalchemy.dialects import postgresql
 
-import config
 from app import db
 from models.db.db_meal_enum import meal_enum_sql
 
 
 class MealTime(db.Model):
-    __table_args__ = {"schema": config.get_config_from_env().DATABASE_SCHEMA}
     __tablename__ = "meal_time"
 
     meal = db.Column(meal_enum_sql, primary_key=True, nullable=False)

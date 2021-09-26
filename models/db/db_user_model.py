@@ -1,13 +1,10 @@
 from sqlalchemy.dialects import postgresql
 from flask_login import UserMixin
 
-import config
-
 from app import db
 
 
 class User(db.Model, UserMixin):
-    __table_args__ = {"schema": config.get_config_from_env().DATABASE_SCHEMA}
     __tablename__ = "user"
 
     user_id = db.Column(postgresql.TEXT, primary_key=True, nullable=False)

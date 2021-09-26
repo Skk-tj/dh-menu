@@ -1,11 +1,9 @@
 from sqlalchemy.dialects import postgresql
 
-import config
 from app import db
 
 
 class DaysPublished(db.Model):
-    __table_args__ = {"schema": config.get_config_from_env().DATABASE_SCHEMA}
     __tablename__ = "days_published"
 
     date = db.Column(postgresql.DATE, primary_key=True)

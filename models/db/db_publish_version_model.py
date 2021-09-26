@@ -1,11 +1,9 @@
 from sqlalchemy.dialects import postgresql
 
-import config
 from app import db
 
 
 class PublishVersion(db.Model):
-    __table_args__ = {"schema": config.get_config_from_env().DATABASE_SCHEMA}
     __tablename__ = "publish_version"
 
     id = db.Column(postgresql.UUID(as_uuid=True), primary_key=True)

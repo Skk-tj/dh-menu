@@ -4,9 +4,10 @@ import pytest
 
 @pytest.fixture
 def client():
-    app.app.config['TESTING'] = True
+    flask_app = app.create_app()
+    flask_app.config['TESTING'] = True
 
-    with app.app.test_client() as client:
+    with flask_app.test_client() as client:
         yield client
 
 

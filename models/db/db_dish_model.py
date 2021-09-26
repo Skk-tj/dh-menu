@@ -1,13 +1,11 @@
 from sqlalchemy.dialects import postgresql
 
-import config
 from app import db
 from models.db.db_meal_enum import meal_enum_sql
 from models.meal_enum import Meal
 
 
 class Dish(db.Model):
-    __table_args__ = {"schema": config.get_config_from_env().DATABASE_SCHEMA}
     __tablename__ = "dish"
 
     dish_id = db.Column(postgresql.UUID(as_uuid=True), primary_key=True)

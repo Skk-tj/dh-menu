@@ -11,10 +11,9 @@ class Config(abc.ABC):
     """
 
     SQLALCHEMY_DATABASE_URI: str
-    DATABASE_SCHEMA: str
-
     SECRET_KEY: str
     REGISTER_OPEN: bool
+
     VERSION_STRING: str = "0.0.5"
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ECHO: bool = False
@@ -25,11 +24,9 @@ class TestConfig(Config):
     """
     Config data class for testing.
     """
-
     def __init__(self):
-        super().__init__(envparse.env.str("TEST_DATABASE_URL"),
-                         envparse.env.str("TEST_DATABASE_SCHEMA"),
-                         envparse.env.str("TEST_FLASK_KEY"),
+        super().__init__(envparse.env.str("TEST_DATABASE_URL", default=None),
+                         envparse.env.str("TEST_FLASK_KEY", default=None),
                          envparse.env.bool("TEST_REGISTER_OPEN", default=True))
 
 
@@ -39,9 +36,8 @@ class ProductionConfig(Config):
     Config data class for production.
     """
     def __init__(self):
-        super().__init__(envparse.env.str("DATABASE_URL"),
-                         envparse.env.str("DATABASE_SCHEMA"),
-                         envparse.env.str("HEROKU_FLASK_KEY"),
+        super().__init__(envparse.env.str("DATABASE_URL", default=None),
+                         envparse.env.str("HEROKU_FLASK_KEY", default=None),
                          envparse.env.bool("REGISTER_OPEN", default=False))
 
 

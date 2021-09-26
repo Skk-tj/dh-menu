@@ -1,11 +1,9 @@
 from sqlalchemy.dialects import postgresql
 
-import config
 from app import db
 
 
 class MessageOfTheDay(db.Model):
-    __table_args__ = {"schema": config.get_config_from_env().DATABASE_SCHEMA}
     __tablename__ = "message_of_the_day"
 
     id = db.Column(postgresql.UUID, primary_key=True)

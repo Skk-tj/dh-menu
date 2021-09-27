@@ -18,7 +18,7 @@ def full_menu_this_week():
 
     this_week: isoweek.Week = isoweek.Week(*(today.isocalendar()[:2]))
 
-    full_menu = user_get_menu_for_week(this_week, db)
+    full_menu = user_get_menu_for_week(this_week)
 
     for day in full_menu:
         day["date"] = day["date"].isoformat()
@@ -37,7 +37,7 @@ def full_menu_for_week(week: str):
     except ValueError as e:
         return abort(400, e)
 
-    full_menu = user_get_menu_for_week(week_obj, db)
+    full_menu = user_get_menu_for_week(week_obj)
 
     for day in full_menu:
         day["date"] = day["date"].isoformat()
@@ -56,7 +56,7 @@ def full_menu_for_day(date: str):
     except ValueError as e:
         return abort(400, e)
 
-    menu_for_this_day = user_get_menu_for_date(datetime_object, db)
+    menu_for_this_day = user_get_menu_for_date(datetime_object)
 
     for meal in menu_for_this_day:
         meal["open_time"] = meal["open_time"].isoformat()
